@@ -1,16 +1,36 @@
-var express = require ("express");
-var app = express();
-var todoController = require("./Controllers/todocontroller")
-//set up template engine
-app.set("view engine", "ejs");
+$(document).ready(function(){
 
-//static files
-app.use(express.static("./public"));
+  $('form').on('submit', function(){
 
-//fire controllers
-todoController(app);
+      var item = $('form input');
+      var todo = {item: item.val()};
+
+      $.ajax({
+        type: 'POST',
+        url: '/todo',
+        data: todo,
+        success: function(data){
+          //do something with the data via front-end framework
+          location.reload();
+        }
+        
+      });
+
+      return false;
+
+  });
 
 
-//listen to a port
-app.listen(3000)
-console.log("You are listening to port 3000");
+  $('li').on('click', function(){
+      var item = $(this).text().replace(/ /g, "-");
+      $.ajax({
+        type: 'DELETE',
+        url: '/todo/' + item,
+        success: function(data){
+          //do something with the data via front-end framework
+          location.reload();
+        }
+      });
+  });
+
+});
